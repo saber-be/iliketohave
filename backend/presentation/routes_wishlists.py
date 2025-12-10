@@ -23,7 +23,7 @@ from backend.application.wishlists.use_cases import (
 from backend.domain.users.entities import UserId
 from backend.domain.wishlists.entities import WishlistId, WishlistItemId
 from backend.infrastructure.repositories.wishlists import SqlAlchemyWishlistsUnitOfWork
-from backend.presentation.dependencies import get_wishlists_uow
+from backend.presentation.dependencies import  get_current_user_id,get_wishlists_uow
 from backend.presentation.schemas import (
     WishlistCreateRequest,
     WishlistItemRequest,
@@ -63,8 +63,8 @@ def _wishlist_to_response(wishlist) -> WishlistResponse:
 @router.post("", response_model=WishlistResponse, status_code=status.HTTP_201_CREATED)
 async def create_wishlist(
     payload: WishlistCreateRequest,
-    current_user_id: UserId = Depends(),
-    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> WishlistResponse:
     use_case = CreateWishlistUseCase(uow=uow)
     result = await use_case.execute(
@@ -80,8 +80,8 @@ async def create_wishlist(
 
 @router.get("", response_model=list[WishlistResponse])
 async def list_my_wishlists(
-    current_user_id: UserId = Depends(),
-    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> list[WishlistResponse]:
     use_case = ListUserWishlistsUseCase(uow=uow)
     result = await use_case.execute(ListUserWishlistsQuery(owner_id=current_user_id))
@@ -92,8 +92,8 @@ async def list_my_wishlists(
 async def update_wishlist(
     wishlist_id: UUID,
     payload: WishlistUpdateRequest,
-    current_user_id: UserId = Depends(),
-    uow: WishlistsUnitOfWork = Depends(SqlAlchemyWishlistsUnitOfWork),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> WishlistResponse:
     use_case = UpdateWishlistUseCase(uow=uow)
     wid = WishlistId(value=wishlist_id)
@@ -114,8 +114,8 @@ async def update_wishlist(
 @router.delete("/{wishlist_id}", status_code=status.HTTP_200_OK)
 async def delete_wishlist(
     wishlist_id: UUID,
-    current_user_id: UserId = Depends(),
-    uow: WishlistsUnitOfWork = Depends(SqlAlchemyWishlistsUnitOfWork),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> None:
     use_case = DeleteWishlistUseCase(uow=uow)
     await use_case.execute(DeleteWishlistCommand(wishlist_id=WishlistId(value=wishlist_id)))
@@ -125,8 +125,8 @@ async def delete_wishlist(
 async def add_item(
     wishlist_id: UUID,
     payload: WishlistItemRequest,
-    current_user_id: UserId = Depends(),
-    uow: WishlistsUnitOfWork = Depends(SqlAlchemyWishlistsUnitOfWork),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> WishlistItemResponse:
     use_case = AddWishlistItemUseCase(uow=uow)
     try:
@@ -159,8 +159,8 @@ async def add_item(
 async def update_item(
     item_id: UUID,
     payload: WishlistItemRequest,
-    current_user_id: UserId = Depends(),
-    uow: WishlistsUnitOfWork = Depends(SqlAlchemyWishlistsUnitOfWork),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> WishlistItemResponse:
     use_case = UpdateWishlistItemUseCase(uow=uow)
     try:
@@ -192,8 +192,8 @@ async def update_item(
 @router.delete("/items/{item_id}", status_code=status.HTTP_200_OK)
 async def delete_item(
     item_id: UUID,
-    current_user_id: UserId = Depends(),
-    uow: WishlistsUnitOfWork = Depends(SqlAlchemyWishlistsUnitOfWork),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow)
 ) -> None:
     use_case = DeleteWishlistItemUseCase(uow=uow)
     await use_case.execute(DeleteWishlistItemCommand(item_id=WishlistItemId(value=item_id)))

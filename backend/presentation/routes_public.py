@@ -13,7 +13,7 @@ from backend.application.wishlists.use_cases import (
 from backend.domain.users.entities import UserId
 from backend.domain.wishlists.entities import WishlistId
 from backend.infrastructure.repositories.wishlists import SqlAlchemyWishlistsUnitOfWork
-from backend.presentation.dependencies import get_wishlists_uow
+from backend.presentation.dependencies import get_current_user_id,get_wishlists_uow
 from backend.presentation.schemas import (
     PublicShareCreateRequest,
     PublicShareResponse,
@@ -34,7 +34,7 @@ def _wishlist_to_response(wishlist) -> WishlistResponse:
 async def create_or_update_share(
     wishlist_id: str,
     payload: PublicShareCreateRequest,
-    current_user_id: UserId = Depends(),
+    current_user_id: UserId = Depends(get_current_user_id),
     uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow),
 ) -> PublicShareResponse:
     # Token is just the wishlist_id here for simplicity; could be random in infra
@@ -81,7 +81,7 @@ async def get_public_wishlist(
 @router.post("/{token}/claim", response_model=WishlistResponse)
 async def claim_wishlist(
     token: str,
-    current_user_id: UserId = Depends(),
+    current_user_id: UserId = Depends(get_current_user_id),
     uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow),
 ) -> WishlistResponse:
     use_case = ClaimWishlistUseCase(uow=uow)

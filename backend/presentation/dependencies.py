@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import os
 from collections.abc import AsyncIterator
-from typing import Annotated
+from uuid import UUID
 
-from fastapi import Depends
+import jwt
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from backend.application.common.interfaces import TokenService
+from backend.domain.users.entities import UserId
 from backend.infrastructure.repositories.users import SqlAlchemyUsersUnitOfWork
 from backend.infrastructure.repositories.wishlists import SqlAlchemyWishlistsUnitOfWork
 from backend.infrastructure.services.security import JwtTokenService
@@ -35,14 +37,50 @@ async def get_session() -> AsyncIterator[AsyncSession]:
 
 async def get_users_uow(
     session: AsyncSession = Depends(get_session),
-) -> AsyncIterator[SqlAlchemyUsersUnitOfWork]:
-    yield SqlAlchemyUsersUnitOfWork(session=session)
+) -> SqlAlchemyUsersUnitOfWork:
+    return SqlAlchemyUsersUnitOfWork(session=session)
 
 
 async def get_wishlists_uow(
     session: AsyncSession = Depends(get_session),
 ) -> AsyncIterator[SqlAlchemyWishlistsUnitOfWork]:
-    yield SqlAlchemyWishlistsUnitOfWork(session=session)
+    return SqlAlchemyWishlistsUnitOfWork(session=session)
+
+
+def extract_user_id_from_token(token: str) -> UserId:
+    try:
+        payload = jwt.decode(token, _jwt_secret, algorithms=[_jwt_algorithm])
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    sub = payload.get("sub")
+    if sub is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token payload",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    try:
+        user_id = UserId(UUID(sub))
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid user identifier in token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return user_id
+
+
+async def get_current_user_id(
+    token: str = Depends(oauth2_scheme),
+) -> UserId:
+    return extract_user_id_from_token(token)
 
 
 _jwt_secret = os.getenv("JWT_SECRET", "change_me_in_production")

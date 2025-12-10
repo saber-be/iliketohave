@@ -10,7 +10,7 @@ from backend.application.users.use_cases import (
 )
 from backend.domain.users.entities import UserId
 from backend.infrastructure.repositories.users import SqlAlchemyUsersUnitOfWork
-from backend.presentation.dependencies import get_users_uow
+from backend.presentation.dependencies import get_current_user_id, get_users_uow
 from backend.presentation.schemas import (
     UserProfileResponse,
     UserProfileUpdateRequest,
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/api/users", tags=["users"])
 
 @router.get("/me/profile", response_model=UserProfileResponse)
 async def get_my_profile(
-    current_user_id: UserId = Depends(),
+    current_user_id: UserId = Depends(get_current_user_id),
     uow: SqlAlchemyUsersUnitOfWork = Depends(get_users_uow),
 ) -> UserProfileResponse:
     use_case = GetProfileUseCase(uow=uow)
@@ -42,8 +42,8 @@ async def get_my_profile(
 @router.put("/me/profile", response_model=UserProfileResponse)
 async def upsert_my_profile(
     payload: UserProfileUpdateRequest,
-    current_user_id: UserId = Depends(),
-    uow: SqlAlchemyUsersUnitOfWork = Depends(),
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyUsersUnitOfWork = Depends(get_users_uow),
 ) -> UserProfileResponse:
     use_case = UpsertProfileUseCase(uow=uow)
     result = await use_case.execute(
