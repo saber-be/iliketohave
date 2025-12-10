@@ -48,6 +48,8 @@ def _wishlist_from_model(model: WishlistModel, items: Optional[list[WishlistItem
                 description=i.description,
                 link=i.link,
                 priority=i.priority,
+                is_received=i.is_received,
+                received_note=i.received_note,
                 created_at=i.created_at,
                 updated_at=i.updated_at,
             )
