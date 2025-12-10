@@ -287,3 +287,52 @@ This lets you:
   - Optionally front with a reverse proxy and TLS
 
 Adjust ports, domains, and environment variables as needed for your infrastructure and security policies.
+
+---
+
+## 4. Database Migrations (Alembic)
+
+Schema changes (new columns/tables) are managed with **Alembic**, which is already listed in `backend/requirements.txt`.
+
+### 4.1 Generating a migration (dev)
+
+1. Ensure `DATABASE_URL` is set (in your shell or via `.env`):
+   ```bash
+   export DATABASE_URL="postgresql+asyncpg://USER:PASSWORD@HOST:5432/DB_NAME"
+   ```
+
+2. From the `backend/` directory, after changing SQLAlchemy models:
+   ```bash
+   cd backend
+   alembic revision --autogenerate -m "describe your change"
+   ```
+
+3. Review the generated file under `backend/alembic/versions/`, then apply it:
+   ```bash
+   alembic upgrade head
+   ```
+
+### 4.2 Running migrations with Docker (dev or prod)
+
+When using Docker Compose, `DATABASE_URL` is provided via `docker/.env` and forwarded into the backend container.
+
+- **Run migrations in the backend container**:
+  ```bash
+  # from the project root or docker/ directory
+  docker compose run --rm backend alembic upgrade head
+  ```
+
+Typical flow for a deploy to the VPS:
+
+1. Build/pull the new backend image.
+2. Run migrations:
+   ```bash
+   cd docker
+   docker compose run --rm backend alembic upgrade head
+   ```
+3. Start or restart services:
+   ```bash
+   docker compose up -d
+   ```
+
+This keeps dev and prod schemas in sync without running manual SQL on the server.

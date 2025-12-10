@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { AuthModal } from './AuthModal';
 import { clearToken, getToken } from '../lib/auth-storage';
@@ -22,7 +23,15 @@ export function Header() {
       <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="text-lg font-semibold text-slate-100">iliketohave</div>
-          <div>
+          <div className="flex items-center gap-3">
+            {isAuthenticated && (
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium text-slate-100 hover:text-sky-400"
+              >
+                Dashboard
+              </Link>
+            )}
             {isAuthenticated ? (
               <button
                 type="button"
