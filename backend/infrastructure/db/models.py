@@ -68,6 +68,8 @@ class WishlistItemModel(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     link: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     priority: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    is_received: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    received_note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
 

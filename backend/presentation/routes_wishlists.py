@@ -13,6 +13,8 @@ from backend.application.wishlists.use_cases import (
     DeleteWishlistItemCommand,
     DeleteWishlistItemUseCase,
     DeleteWishlistUseCase,
+    GetWishlistQuery,
+    GetWishlistUseCase,
     ListUserWishlistsQuery,
     ListUserWishlistsUseCase,
     UpdateWishlistCommand,
@@ -50,6 +52,8 @@ def _wishlist_to_response(wishlist) -> WishlistResponse:
                 description=item.description,
                 link=item.link,
                 priority=item.priority,
+                is_received=item.is_received,
+                received_note=item.received_note,
                 created_at=item.created_at,
                 updated_at=item.updated_at,
             )
@@ -86,6 +90,21 @@ async def list_my_wishlists(
     use_case = ListUserWishlistsUseCase(uow=uow)
     result = await use_case.execute(ListUserWishlistsQuery(owner_id=current_user_id))
     return [_wishlist_to_response(w) for w in result.wishlists]
+
+
+@router.get("/{wishlist_id}", response_model=WishlistResponse)
+async def get_wishlist(
+    wishlist_id: UUID,
+    current_user_id: UserId = Depends(get_current_user_id),
+    uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow),
+) -> WishlistResponse:
+    use_case = GetWishlistUseCase(uow=uow)
+    wid = WishlistId(value=wishlist_id)
+    try:
+        result = await use_case.execute(GetWishlistQuery(wishlist_id=wid, owner_id=current_user_id))
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    return _wishlist_to_response(result.wishlist)
 
 
 @router.put("/{wishlist_id}", response_model=WishlistResponse)
@@ -137,6 +156,8 @@ async def add_item(
                 description=payload.description,
                 link=payload.link,
                 priority=payload.priority,
+                is_received=payload.is_received,
+                received_note=payload.received_note,
             )
         )
     except ValueError as e:
@@ -150,6 +171,8 @@ async def add_item(
         description=item.description,
         link=item.link,
         priority=item.priority,
+        is_received=item.is_received,
+        received_note=item.received_note,
         created_at=item.created_at,
         updated_at=item.updated_at,
     )
@@ -171,6 +194,8 @@ async def update_item(
                 description=payload.description,
                 link=payload.link,
                 priority=payload.priority,
+                is_received=payload.is_received,
+                received_note=payload.received_note,
             )
         )
     except ValueError as e:

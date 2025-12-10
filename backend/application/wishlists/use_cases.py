@@ -123,6 +123,30 @@ class ListUserWishlistsUseCase:
         return ListUserWishlistsResult(wishlists=wishlists)
 
 
+@dataclass(slots=True)
+class GetWishlistQuery:
+    wishlist_id: WishlistId
+    owner_id: UserId
+
+
+@dataclass(slots=True)
+class GetWishlistResult:
+    wishlist: Wishlist
+
+
+class GetWishlistUseCase:
+    def __init__(self, uow: WishlistsUnitOfWork) -> None:
+        self._uow = uow
+
+    async def execute(self, query: GetWishlistQuery) -> GetWishlistResult:
+        async with self._uow as uow:
+            wishlist = await uow.wishlists.get_by_id(query.wishlist_id)
+            if wishlist is None or wishlist.owner_id != query.owner_id:
+                raise ValueError("Wishlist not found")
+
+        return GetWishlistResult(wishlist=wishlist)
+
+
 # Wishlist items
 
 
@@ -133,6 +157,8 @@ class AddWishlistItemCommand:
     description: Optional[str] = None
     link: Optional[str] = None
     priority: Optional[int] = None
+    is_received: Optional[bool] = None
+    received_note: Optional[str] = None
 
 
 @dataclass(slots=True)
@@ -157,6 +183,8 @@ class AddWishlistItemUseCase:
                 description=cmd.description,
                 link=cmd.link,
                 priority=cmd.priority,
+                is_received=cmd.is_received or False,
+                received_note=cmd.received_note,
             )
             wishlist.add_item(item)
 
@@ -174,6 +202,8 @@ class UpdateWishlistItemCommand:
     description: Optional[str] = None
     link: Optional[str] = None
     priority: Optional[int] = None
+    is_received: Optional[bool] = None
+    received_note: Optional[str] = None
 
 
 @dataclass(slots=True)
@@ -200,6 +230,8 @@ class UpdateWishlistItemUseCase:
                 description=cmd.description,
                 link=cmd.link,
                 priority=cmd.priority,
+                is_received=cmd.is_received,
+                received_note=cmd.received_note,
             )
 
             await uow.items.update(item)

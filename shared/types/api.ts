@@ -38,6 +38,8 @@ export interface WishlistItemResponse {
   description?: string | null;
   link?: string | null;
   priority?: number | null;
+  is_received?: boolean;
+  received_note?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -64,4 +66,5 @@ export interface PublicShareResponse {
 export interface PublicWishlistResponse {
   wishlist: WishlistResponse | null;
   share: PublicShareResponse | null;
+  owner_name?: string | null;
 }

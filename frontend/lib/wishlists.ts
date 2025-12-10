@@ -71,6 +71,8 @@ export async function updateWishlistItem(itemId: string, payload: {
   description?: string | null;
   link?: string | null;
   priority?: number | null;
+  is_received?: boolean;
+  received_note?: string | null;
 }): Promise<WishlistItemResponse> {
   const res = await api.put<WishlistItemResponse>(`/api/wishlists/items/${itemId}`, payload, {
     headers: authHeaders(),

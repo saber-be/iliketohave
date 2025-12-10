@@ -76,6 +76,8 @@ def _item_from_model(model: WishlistItemModel) -> WishlistItem:
         description=model.description,
         link=model.link,
         priority=model.priority,
+        is_received=model.is_received,
+        received_note=model.received_note,
         created_at=model.created_at,
         updated_at=model.updated_at,
     )
@@ -88,6 +90,8 @@ def _item_to_model(item: WishlistItem, model: Optional[WishlistItemModel] = None
     model.description = item.description
     model.link = item.link
     model.priority = item.priority
+    model.is_received = item.is_received
+    model.received_note = item.received_note
     model.created_at = item.created_at
     model.updated_at = item.updated_at
     return model

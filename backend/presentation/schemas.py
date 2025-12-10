@@ -53,6 +53,8 @@ class WishlistItemRequest(BaseModel):
     description: Optional[str] = None
     link: Optional[str] = None
     priority: Optional[int] = Field(default=None, ge=1)
+    is_received: Optional[bool] = None
+    received_note: Optional[str] = None
 
 
 class WishlistItemResponse(BaseModel):
@@ -62,6 +64,8 @@ class WishlistItemResponse(BaseModel):
     description: Optional[str] = None
     link: Optional[str] = None
     priority: Optional[int] = None
+    is_received: bool = False
+    received_note: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
@@ -104,3 +108,4 @@ class PublicShareResponse(BaseModel):
 class PublicWishlistResponse(BaseModel):
     wishlist: Optional[WishlistResponse]
     share: Optional[PublicShareResponse]
+    owner_name: Optional[str] = None

@@ -13,7 +13,8 @@ from backend.application.wishlists.use_cases import (
 from backend.domain.users.entities import UserId
 from backend.domain.wishlists.entities import WishlistId
 from backend.infrastructure.repositories.wishlists import SqlAlchemyWishlistsUnitOfWork
-from backend.presentation.dependencies import get_current_user_id,get_wishlists_uow
+from backend.infrastructure.repositories.users import SqlAlchemyUsersUnitOfWork
+from backend.presentation.dependencies import get_current_user_id, get_users_uow, get_wishlists_uow
 from backend.presentation.schemas import (
     PublicShareCreateRequest,
     PublicShareResponse,
@@ -60,14 +61,27 @@ async def create_or_update_share(
 async def get_public_wishlist(
     token: str,
     uow: SqlAlchemyWishlistsUnitOfWork = Depends(get_wishlists_uow),
+    users_uow: SqlAlchemyUsersUnitOfWork = Depends(get_users_uow),
 ) -> PublicWishlistResponse:
     use_case = GetPublicWishlistUseCase(uow=uow)
     result = await use_case.execute(GetPublicWishlistQuery(token=token))
     if result.wishlist is None or result.share is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Public wishlist not found")
 
+    wishlist = result.wishlist
+
+    # Try to resolve owner profile name for display; ignore errors and fall back to None
+    owner_name: str | None = None
+    try:
+        async with users_uow as uuow:
+            profile = await uuow.profiles.get_by_user_id(UserId(value=wishlist.owner_id.value))
+            if profile is not None:
+                owner_name = profile.name
+    except Exception:
+        owner_name = None
+
     return PublicWishlistResponse(
-        wishlist=_wishlist_to_response(result.wishlist),
+        wishlist=_wishlist_to_response(wishlist),
         share=PublicShareResponse(
             wishlist_id=result.share.wishlist_id.value,
             token=result.share.token.value,
@@ -75,6 +89,7 @@ async def get_public_wishlist(
             created_at=result.share.created_at,
             expires_at=result.share.expires_at,
         ),
+        owner_name=owner_name,
     )
 
 

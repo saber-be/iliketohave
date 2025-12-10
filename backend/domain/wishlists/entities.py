@@ -40,6 +40,8 @@ class WishlistItem:
     description: Optional[str] = None
     link: Optional[str] = None
     priority: Optional[int] = None
+    is_received: bool = False
+    received_note: Optional[str] = None
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: datetime = field(default_factory=datetime.utcnow)
 
@@ -49,6 +51,8 @@ class WishlistItem:
         description: Optional[str] = None,
         link: Optional[str] = None,
         priority: Optional[int] = None,
+        is_received: Optional[bool] = None,
+        received_note: Optional[str] = None,
     ) -> None:
         changed = False
 
@@ -70,6 +74,14 @@ class WishlistItem:
             if priority < 1:
                 raise ValueError("Priority must be positive")
             self.priority = priority
+            changed = True
+
+        if is_received is not None and is_received != self.is_received:
+            self.is_received = is_received
+            changed = True
+
+        if received_note is not None and received_note != self.received_note:
+            self.received_note = received_note
             changed = True
 
         if changed:

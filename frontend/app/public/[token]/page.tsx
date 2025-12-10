@@ -46,13 +46,16 @@ export default function PublicWishlistPage() {
     return <p>Public wishlist not found.</p>;
   }
 
-  const { wishlist, share } = data;
+  const { wishlist, share, owner_name } = data;
 
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">{wishlist.name}</h1>
+          {owner_name && (
+            <p className="text-xs text-slate-400">Wishlist by {owner_name}</p>
+          )}
           {wishlist.description && <p className="text-sm text-slate-300">{wishlist.description}</p>}
         </div>
         {share?.is_claimable && (
@@ -69,8 +72,24 @@ export default function PublicWishlistPage() {
 
       <ul className="space-y-2 text-sm">
         {wishlist.items?.map((item: any) => (
-          <li key={item.id} className="rounded border border-slate-800 bg-slate-900 px-3 py-2">
+          <li key={item.id} className="rounded border border-slate-800 bg-slate-900 px-3 py-2 space-y-1">
             <div className="font-medium">{item.title}</div>
+            {item.link && (
+              <div className="text-xs">
+                <span className="text-slate-400">URL: </span>
+                <a href={item.link} target="_blank" rel="noreferrer" className="text-sky-400 hover:underline">
+                  {item.link}
+                </a>
+              </div>
+            )}
+            {item.description && (
+              <div className="text-xs text-slate-300">{item.description}</div>
+            )}
+            {item.is_received && (
+              <div className="text-xs text-emerald-400 mt-1">
+                {item.received_note || 'This item has been received as a gift.'}
+              </div>
+            )}
           </li>
         ))}
       </ul>
