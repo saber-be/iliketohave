@@ -9,6 +9,8 @@ from .entities import (
     Wishlist,
     WishlistId,
     WishlistItem,
+    WishlistItemComment,
+    WishlistItemCommentId,
     WishlistItemId,
 )
 from backend.domain.users.entities import UserId
@@ -48,6 +50,20 @@ class WishlistItemRepository(Protocol):
         ...
 
 
+class WishlistItemCommentRepository(Protocol):
+    async def get_by_id(self, comment_id: WishlistItemCommentId) -> Optional[WishlistItemComment]:
+        ...
+
+    async def list_by_item_ids(self, item_ids: List[WishlistItemId]) -> List[WishlistItemComment]:
+        ...
+
+    async def add(self, comment: WishlistItemComment) -> None:
+        ...
+
+    async def delete(self, comment_id: WishlistItemCommentId) -> None:
+        ...
+
+
 class PublicWishlistShareRepository(Protocol):
     async def get_by_token(self, token: PublicShareToken) -> Optional[PublicWishlistShare]:
         ...
@@ -69,6 +85,7 @@ class UnitOfWork(ABC):
     wishlists: WishlistRepository
     items: WishlistItemRepository
     shares: PublicWishlistShareRepository
+    comments: WishlistItemCommentRepository
 
     @abstractmethod
     async def __aenter__(self) -> "UnitOfWork":

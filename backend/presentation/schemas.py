@@ -23,6 +23,20 @@ class UserResponse(BaseModel):
     updated_at: datetime
 
 
+class WishlistItemCommentResponse(BaseModel):
+    id: UUID
+    item_id: UUID
+    user_id: UUID
+    parent_id: Optional[UUID] = None
+    content: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class WishlistItemCommentCreateRequest(BaseModel):
+    content: str = Field(..., min_length=1)
+
+
 class UserProfileResponse(BaseModel):
     user_id: UUID
     name: str

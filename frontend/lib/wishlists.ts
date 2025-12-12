@@ -5,6 +5,7 @@ import type {
   UserProfileUpdateRequest,
   WishlistItemResponse,
   WishlistResponse,
+  WishlistItemCommentResponse,
 } from '../../shared/types/api';
 import { getToken } from './auth-storage';
 
@@ -88,6 +89,25 @@ export async function deleteWishlistItem(itemId: string): Promise<void> {
 
 export async function fetchPublicWishlist(token: string): Promise<PublicWishlistResponse> {
   const res = await api.get<PublicWishlistResponse>(`/api/public/${token}`);
+  return res.data;
+}
+
+export async function fetchPublicWishlistComments(token: string): Promise<WishlistItemCommentResponse[]> {
+  const res = await api.get<WishlistItemCommentResponse[]>(`/api/public/${token}/comments`);
+  return res.data;
+}
+
+export async function createPublicItemComment(itemId: string, payload: { content: string }): Promise<WishlistItemCommentResponse> {
+  const res = await api.post<WishlistItemCommentResponse>(`/api/public/items/${itemId}/comments`, payload, {
+    headers: authHeaders(),
+  });
+  return res.data;
+}
+
+export async function createPublicCommentReply(commentId: string, payload: { content: string }): Promise<WishlistItemCommentResponse> {
+  const res = await api.post<WishlistItemCommentResponse>(`/api/public/comments/${commentId}/replies`, payload, {
+    headers: authHeaders(),
+  });
   return res.data;
 }
 

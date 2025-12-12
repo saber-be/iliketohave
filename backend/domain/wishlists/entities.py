@@ -27,6 +27,15 @@ class WishlistItemId:
         return WishlistItemId(value=uuid4())
 
 
+@dataclass(frozen=True, slots=True)
+class WishlistItemCommentId:
+    value: UUID
+
+    @staticmethod
+    def new() -> "WishlistItemCommentId":
+        return WishlistItemCommentId(value=uuid4())
+
+
 class WishlistVisibility(str, Enum):
     PRIVATE = "private"
     PUBLIC = "public"
@@ -86,6 +95,25 @@ class WishlistItem:
 
         if changed:
             self.updated_at = datetime.utcnow()
+
+
+@dataclass(slots=True)
+class WishlistItemComment:
+    id: WishlistItemCommentId
+    item_id: WishlistItemId
+    user_id: UserId
+    parent_id: Optional[WishlistItemCommentId] = None
+    content: str = ""
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
+
+    def update_content(self, content: str) -> None:
+        if not content.strip():
+            raise ValueError("Content cannot be empty")
+        if content == self.content:
+            return
+        self.content = content
+        self.updated_at = datetime.utcnow()
 
 
 @dataclass(slots=True)

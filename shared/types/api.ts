@@ -14,6 +14,16 @@ export interface UserResponse {
   updated_at: string;
 }
 
+export interface WishlistItemCommentResponse {
+  id: UUID;
+  item_id: UUID;
+  user_id: UUID;
+  parent_id?: UUID | null;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface UserProfileResponse {
   user_id: UUID;
   name: string;

@@ -76,6 +76,25 @@ class WishlistItemModel(Base):
     wishlist: Mapped[WishlistModel] = relationship(back_populates="items")
 
 
+class WishlistItemCommentModel(Base):
+    __tablename__ = "wishlist_item_comments"
+
+    id: Mapped[UUID_TYPE] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    wishlist_item_id: Mapped[UUID_TYPE] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("wishlist_items.id"), nullable=False, index=True
+    )
+    user_id: Mapped[UUID_TYPE] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    parent_comment_id: Mapped[UUID_TYPE | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("wishlist_item_comments.id"), nullable=True, index=True
+    )
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
+
+    item: Mapped["WishlistItemModel"] = relationship("WishlistItemModel")
+    user: Mapped["UserModel"] = relationship("UserModel")
+
+
 class PublicWishlistShareModel(Base):
     __tablename__ = "public_wishlist_shares"
 

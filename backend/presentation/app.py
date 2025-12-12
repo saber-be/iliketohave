@@ -47,12 +47,6 @@ def create_app() -> FastAPI:
         description="Backend API for iliketohave.com wishlist PWA",
     )
 
-    @app.on_event("startup")
-    async def on_startup() -> None:
-        # Ensure all tables exist; in a real app you may prefer Alembic migrations
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-
     allowed_origins_env = os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:3000,like.chineshyar.com")
     allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
 

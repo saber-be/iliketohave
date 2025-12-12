@@ -12,17 +12,21 @@ from backend.domain.wishlists.entities import (
     Wishlist,
     WishlistId,
     WishlistItem,
+    WishlistItemComment,
+    WishlistItemCommentId,
     WishlistItemId,
     WishlistVisibility,
 )
 from backend.domain.wishlists.repositories import (
     PublicWishlistShareRepository,
     UnitOfWork as WishlistsUnitOfWork,
+    WishlistItemCommentRepository,
     WishlistItemRepository,
     WishlistRepository,
 )
 from backend.infrastructure.db.models import (
     PublicWishlistShareModel,
+    WishlistItemCommentModel,
     WishlistItemModel,
     WishlistModel,
 )
@@ -99,6 +103,29 @@ def _item_to_model(item: WishlistItem, model: Optional[WishlistItemModel] = None
     return model
 
 
+def _comment_from_model(model: WishlistItemCommentModel) -> WishlistItemComment:
+    return WishlistItemComment(
+        id=WishlistItemCommentId(value=model.id),
+        item_id=WishlistItemId(value=model.wishlist_item_id),
+        user_id=UserId(value=model.user_id),
+        parent_id=WishlistItemCommentId(value=model.parent_comment_id) if model.parent_comment_id else None,
+        content=model.content,
+        created_at=model.created_at,
+        updated_at=model.updated_at,
+    )
+
+
+def _comment_to_model(comment: WishlistItemComment, model: Optional[WishlistItemCommentModel] = None) -> WishlistItemCommentModel:
+    if model is None:
+        model = WishlistItemCommentModel(id=comment.id.value, wishlist_item_id=comment.item_id.value)
+    model.user_id = comment.user_id.value
+    model.parent_comment_id = comment.parent_id.value if comment.parent_id else None
+    model.content = comment.content
+    model.created_at = comment.created_at
+    model.updated_at = comment.updated_at
+    return model
+
+
 def _share_from_model(model: PublicWishlistShareModel) -> PublicWishlistShare:
     return PublicWishlistShare(
         wishlist_id=WishlistId(value=model.wishlist_id),
@@ -162,6 +189,36 @@ class SqlAlchemyWishlistRepository(WishlistRepository):
 
     async def delete(self, wishlist_id: WishlistId) -> None:
         stmt = select(WishlistModel).where(WishlistModel.id == wishlist_id.value)
+        result = await self._session.execute(stmt)
+        model = result.scalar_one_or_none()
+        if model is not None:
+            await self._session.delete(model)
+
+
+class SqlAlchemyWishlistItemCommentRepository(WishlistItemCommentRepository):
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def get_by_id(self, comment_id: WishlistItemCommentId) -> Optional[WishlistItemComment]:
+        stmt = select(WishlistItemCommentModel).where(WishlistItemCommentModel.id == comment_id.value)
+        result = await self._session.execute(stmt)
+        model = result.scalar_one_or_none()
+        return _comment_from_model(model) if model else None
+
+    async def list_by_item_ids(self, item_ids: list[WishlistItemId]) -> list[WishlistItemComment]:
+        if not item_ids:
+            return []
+        ids = [iid.value for iid in item_ids]
+        stmt = select(WishlistItemCommentModel).where(WishlistItemCommentModel.wishlist_item_id.in_(ids))
+        result = await self._session.execute(stmt)
+        return [_comment_from_model(m) for m in result.scalars().all()]
+
+    async def add(self, comment: WishlistItemComment) -> None:
+        model = _comment_to_model(comment)
+        self._session.add(model)
+
+    async def delete(self, comment_id: WishlistItemCommentId) -> None:
+        stmt = select(WishlistItemCommentModel).where(WishlistItemCommentModel.id == comment_id.value)
         result = await self._session.execute(stmt)
         model = result.scalar_one_or_none()
         if model is not None:
@@ -252,6 +309,7 @@ class SqlAlchemyWishlistsUnitOfWork(WishlistsUnitOfWork):
         self.wishlists = SqlAlchemyWishlistRepository(session)
         self.items = SqlAlchemyWishlistItemRepository(session)
         self.shares = SqlAlchemyPublicWishlistShareRepository(session)
+        self.comments = SqlAlchemyWishlistItemCommentRepository(session)
 
     async def __aenter__(self) -> "SqlAlchemyWishlistsUnitOfWork":
         return self

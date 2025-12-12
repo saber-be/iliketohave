@@ -52,7 +52,7 @@ export default function ProfilePage() {
   return (
     <section className="space-y-4">
       <h1 className="text-2xl font-semibold">Profile</h1>
-      {message && <p className="text-sm text-slate-300">{message}</p>}
+      {message && <p className="text-sm text-slate-600">{message}</p>}
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
           <label className="mb-1 block text-sm" htmlFor="name">
@@ -60,7 +60,7 @@ export default function ProfilePage() {
           </label>
           <input
             id="name"
-            className="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
+            className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -73,7 +73,7 @@ export default function ProfilePage() {
           <input
             id="birthday"
             type="date"
-            className="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
+            className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
           />
@@ -84,7 +84,7 @@ export default function ProfilePage() {
           </label>
           <input
             id="photo"
-            className="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
+            className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
             value={photoUrl}
             onChange={(e) => setPhotoUrl(e.target.value)}
           />
