@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { AuthModal } from './AuthModal';
 import { clearToken, getToken } from '../lib/auth-storage';
@@ -10,6 +11,7 @@ export function Header() {
   const [authOpen, setAuthOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { t, i18n } = useTranslation();
+  const router = useRouter();
 
   useEffect(() => {
     setIsAuthenticated(!!getToken());
@@ -18,6 +20,7 @@ export function Header() {
   const handleLogout = () => {
     clearToken();
     setIsAuthenticated(false);
+    router.replace('/');
   };
 
   const switchLanguage = (lang: 'en' | 'fa') => {
