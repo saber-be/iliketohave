@@ -4,8 +4,17 @@
 
 body {
   @apply bg-sky-50 text-slate-900 min-h-screen;
+  font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 main {
-  @apply max-w-3xl mx-auto px-4 py-8;
+  @apply max-w-3xl mx-auto px-4 py-6;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
 }

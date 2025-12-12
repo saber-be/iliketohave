@@ -106,7 +106,7 @@ export default function PublicWishlistPage() {
         </div>
       </div>
 
-      <ul className="space-y-2 text-sm">
+      <ul className="space-y-3 text-base">
         {wishlist.items?.map((item: any) => {
           const isGifted = item.is_received;
           const entry = groupedComments.get(item.id) ?? { roots: [], repliesByParent: {} };
@@ -115,7 +115,7 @@ export default function PublicWishlistPage() {
             key={item.id}
             className={`rounded px-3 py-2 space-y-1 border ${
               isGifted
-                ? 'border-emerald-700 bg-emerald-950/40 text-emerald-50'
+                ? 'border-slate-800 bg-slate-900/90 text-slate-200 opacity-80'
                 : 'border-slate-800 bg-slate-900 text-slate-100'
             }`}
           >
@@ -135,14 +135,14 @@ export default function PublicWishlistPage() {
             )}
               </div>
               {isGifted && (
-                <div className="shrink-0 rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-300 border border-emerald-600">
-                  Already gifted
+                <div className="shrink-0 rounded-full bg-slate-900/70 px-3 py-1 text-[11px] font-semibold text-emerald-300 border border-emerald-500">
+                  Already gifted (you picked well)
                 </div>
               )}
             </div>
             {isGifted && (
               <div className="text-xs text-emerald-200 mt-1">
-                {item.received_note || 'This item has been received as a gift.'}
+                {item.received_note || 'This one is already off the wishlist and on the happy-owner list.'}
               </div>
             )}
             <div className="mt-2 flex items-center justify-between gap-2">
