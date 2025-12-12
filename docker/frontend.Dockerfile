@@ -2,9 +2,15 @@ FROM node:20-alpine
 
 WORKDIR /app/frontend
 
-# Install dependencies only (no build). Source code will be bind-mounted in compose.
+# Install dependencies (no build at image build time).
+# In development, source will be bind-mounted and will override the copied code.
 COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm install
+
+# Copy application source so that production builds can run inside the container.
+# In development, this will be overlaid by the bind mounts from docker-compose.yml.
+COPY frontend .
+COPY shared /app/shared
 
 EXPOSE 3000
 
