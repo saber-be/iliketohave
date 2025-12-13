@@ -60,14 +60,14 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl border border-sky-100">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-fuchsia-100">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setMode('login')}
               className={`px-3 py-1 text-sm font-medium rounded-full ${
-                mode === 'login' ? 'bg-sky-600 text-white' : 'bg-sky-50 text-slate-700'
+                mode === 'login' ? 'bg-fuchsia-600 text-white' : 'bg-fuchsia-50 text-slate-700'
               }`}
             >
               Login
@@ -76,7 +76,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               type="button"
               onClick={() => setMode('signup')}
               className={`px-3 py-1 text-sm font-medium rounded-full ${
-                mode === 'signup' ? 'bg-sky-600 text-white' : 'bg-sky-50 text-slate-700'
+                mode === 'signup' ? 'bg-fuchsia-600 text-white' : 'bg-fuchsia-50 text-slate-700'
               }`}
             >
               Sign up
@@ -85,13 +85,13 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
           <button
             type="button"
             onClick={handleClose}
-            className="text-slate-400 hover:text-slate-200"
+            className="text-slate-500 hover:text-slate-900"
           >
             ✕
           </button>
         </div>
 
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">
+        <h2 className="mb-4 text-xl font-semibold text-slate-900">
           {mode === 'login' ? 'Welcome back' : 'Create your account'}
         </h2>
 
@@ -103,21 +103,21 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm text-slate-700" htmlFor="email">
+            <label className="mb-1 block text-base text-slate-700" htmlFor="email">
               Email
             </label>
             <input
               id="email"
               type="email"
               required
-              className="w-full rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+              className="w-full rounded-xl border border-fuchsia-200 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-slate-700" htmlFor="password">
+            <label className="mb-1 block text-base text-slate-700" htmlFor="password">
               Password
             </label>
             <input
@@ -125,17 +125,17 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               type="password"
               required
               minLength={6}
-              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-base">
             <label className="inline-flex items-center gap-2 text-slate-700">
               <input
                 type="checkbox"
-                className="h-4 w-4 rounded border-sky-300 bg-white text-sky-600"
+                className="h-4 w-4 rounded border-fuchsia-300 bg-white text-fuchsia-600"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
               />
@@ -146,7 +146,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 inline-flex w-full items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60"
+            className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-fuchsia-600 px-4 py-2.5 text-base font-semibold text-white hover:bg-fuchsia-500 disabled:opacity-60"
           >
             {loading ? 'Please wait…' : mode === 'login' ? 'Login' : 'Sign up'}
           </button>

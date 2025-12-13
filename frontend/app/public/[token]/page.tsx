@@ -125,7 +125,7 @@ export default function PublicWishlistPage() {
             {item.link && (
               <div className="text-xs">
                 <span className="text-slate-400">URL: </span>
-                <a href={item.link} target="_blank" rel="noreferrer" className="text-sky-400 hover:underline">
+                <a href={item.link} target="_blank" rel="noreferrer" className="text-fuchsia-300 hover:underline">
                   {item.link}
                 </a>
               </div>
@@ -152,7 +152,7 @@ export default function PublicWishlistPage() {
               {isAuthenticated && (
                 <button
                   type="button"
-                  className="text-[11px] text-sky-400 hover:underline"
+                  className="text-[11px] text-fuchsia-300 hover:underline"
                   onClick={() => {
                     setActiveCommentItemId((prev) => (prev === item.id ? null : item.id));
                     setActiveReplyFor(null);
@@ -171,7 +171,7 @@ export default function PublicWishlistPage() {
                         <span className="text-slate-400 mr-1">Comment by</span>
                         <Link
                           href={`/users/${c.user_id}`}
-                          className="text-sky-400 hover:underline"
+                          className="text-fuchsia-300 hover:underline"
                         >
                           {c.user_name ?? 'Someone'}
                         </Link>
@@ -181,7 +181,7 @@ export default function PublicWishlistPage() {
                     {isAuthenticated && (
                       <button
                         type="button"
-                        className="text-[11px] text-sky-400 hover:underline"
+                        className="text-[11px] text-fuchsia-300 hover:underline"
                         onClick={() => {
                           setActiveReplyFor(c.id);
                           setActiveCommentItemId(null);
@@ -197,7 +197,7 @@ export default function PublicWishlistPage() {
                         Reply by{' '}
                         <Link
                           href={`/users/${r.user_id}`}
-                          className="text-sky-400 hover:underline"
+                          className="text-fuchsia-300 hover:underline"
                         >
                           {r.user_name ?? 'Someone'}
                         </Link>
@@ -220,7 +220,7 @@ export default function PublicWishlistPage() {
                       />
                       <button
                         type="button"
-                        className="text-[11px] px-2 py-1 rounded bg-sky-600 text-white"
+                        className="text-[11px] px-2 py-1 rounded bg-fuchsia-600 text-white"
                         onClick={() => handleAddReply(c.id)}
                       >
                         Send
@@ -244,7 +244,7 @@ export default function PublicWishlistPage() {
                   />
                   <button
                     type="button"
-                    className="text-[11px] px-2 py-1 rounded bg-sky-600 text-white"
+                    className="text-[11px] px-2 py-1 rounded bg-fuchsia-600 text-white"
                     onClick={() => handleAddComment(item.id)}
                   >
                     Send

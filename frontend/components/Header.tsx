@@ -34,19 +34,19 @@ export function Header() {
 
   return (
     <>
-      <header className="border-b border-sky-100 bg-white/90 backdrop-blur">
+      <header className="border-b border-fuchsia-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
-            <div className="text-lg font-semibold text-slate-900">{t('appName')}</div>
+            <div className="text-xl font-semibold text-slate-900">{t('appName')}</div>
 
-            <div className="flex items-center gap-1 rounded-full border border-sky-100 bg-sky-50 px-1 text-xs">
+            <div className="flex items-center gap-1 rounded-full border border-fuchsia-100 bg-fuchsia-50 px-1 text-sm">
               <button
                 type="button"
                 onClick={() => switchLanguage('en')}
                 className={`px-2 py-0.5 rounded-full ${
                   currentLang === 'en'
-                    ? 'bg-sky-600 text-white'
-                    : 'text-slate-500 hover:text-sky-600'
+                    ? 'bg-fuchsia-600 text-white'
+                    : 'text-slate-600 hover:text-fuchsia-700'
                 }`}
               >
                 EN
@@ -56,8 +56,8 @@ export function Header() {
                 onClick={() => switchLanguage('fa')}
                 className={`px-2 py-0.5 rounded-full ${
                   currentLang === 'fa'
-                    ? 'bg-sky-600 text-white'
-                    : 'text-slate-300 hover:text-sky-400'
+                    ? 'bg-fuchsia-600 text-white'
+                    : 'text-slate-600 hover:text-fuchsia-700'
                 }`}
               >
                 FA
@@ -69,13 +69,13 @@ export function Header() {
               <>
                 <Link
                   href="/dashboard"
-                  className="text-sm font-medium text-slate-700 hover:text-sky-600"
+                  className="text-base font-medium text-slate-700 hover:text-fuchsia-700"
                 >
                   {t('headerDashboard')}
                 </Link>
                 <Link
                   href="/profile"
-                  className="text-sm font-medium text-slate-700 hover:text-sky-600"
+                  className="text-base font-medium text-slate-700 hover:text-fuchsia-700"
                 >
                   {t('headerProfile')}
                 </Link>
@@ -85,7 +85,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-md border border-sky-200 px-3 py-1 text-sm text-slate-700 hover:bg-sky-50"
+                className="rounded-xl border border-fuchsia-200 px-3 py-1.5 text-base text-slate-700 hover:bg-fuchsia-50"
               >
                 {t('headerLogout')}
               </button>
@@ -93,7 +93,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => setAuthOpen(true)}
-                className="rounded-md bg-sky-600 px-3 py-1 text-sm font-medium text-white hover:bg-sky-500"
+                className="rounded-xl bg-fuchsia-600 px-3 py-1.5 text-base font-semibold text-white hover:bg-fuchsia-500"
               >
                 {t('headerAuthCta')}
               </button>

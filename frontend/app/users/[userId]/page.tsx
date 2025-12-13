@@ -76,7 +76,7 @@ export default function PublicUserPage() {
                   </div>
                   <Link
                     href={`/public/${wl.id}`}
-                    className="text-xs text-sky-400 hover:underline"
+                    className="text-xs text-fuchsia-300 hover:underline"
                   >
                     View wishlist
                   </Link>

@@ -58,7 +58,7 @@ export default function ProfilePage() {
   return (
     <section className="space-y-4">
       <h1 className="text-2xl font-semibold">Profile</h1>
-      {message && <p className="text-sm text-slate-600">{message}</p>}
+      {message && <p className="text-base text-slate-700">{message}</p>}
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
           <label className="mb-1 block text-sm" htmlFor="username">
@@ -66,7 +66,7 @@ export default function ProfilePage() {
           </label>
           <input
             id="username"
-            className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+            className="w-full rounded-xl border border-fuchsia-200 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -78,7 +78,7 @@ export default function ProfilePage() {
             </label>
             <input
               id="firstName"
-              className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+              className="w-full rounded-xl border border-fuchsia-200 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
@@ -89,7 +89,7 @@ export default function ProfilePage() {
             </label>
             <input
               id="lastName"
-              className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+              className="w-full rounded-xl border border-fuchsia-200 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
@@ -102,7 +102,7 @@ export default function ProfilePage() {
           <input
             id="birthday"
             type="date"
-            className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+            className="w-full rounded-xl border border-fuchsia-200 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
           />
@@ -113,7 +113,7 @@ export default function ProfilePage() {
           </label>
           <input
             id="photo"
-            className="w-full rounded border border-sky-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+            className="w-full rounded-xl border border-fuchsia-200 bg-white px-3 py-2 text-base text-slate-900 outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500"
             value={photoUrl}
             onChange={(e) => setPhotoUrl(e.target.value)}
           />
@@ -121,7 +121,7 @@ export default function ProfilePage() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60"
+          className="rounded-2xl bg-fuchsia-600 px-4 py-2.5 text-base font-semibold text-white hover:bg-fuchsia-500 disabled:opacity-60"
         >
           {saving ? 'Saving…' : 'Save'}
         </button>
