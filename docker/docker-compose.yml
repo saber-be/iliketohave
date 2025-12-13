@@ -37,6 +37,11 @@ services:
       ACCESS_TOKEN_EXPIRES_MIN: 60
       CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:3000}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
+      GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-http://localhost:8000/api/auth/sso/google/callback}
+      SSO_STATE_SECRET: ${SSO_STATE_SECRET:-}
     depends_on:
       db:
         condition: service_healthy

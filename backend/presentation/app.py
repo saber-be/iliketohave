@@ -18,6 +18,7 @@ from backend.infrastructure.repositories.users import SqlAlchemyUsersUnitOfWork
 from backend.infrastructure.repositories.wishlists import SqlAlchemyWishlistsUnitOfWork
 from backend.infrastructure.services.security import BcryptPasswordHasher, JwtTokenService
 from backend.presentation import routes_auth
+from backend.presentation import routes_sso
 from backend.presentation import routes_users
 from backend.presentation import routes_wishlists
 from backend.presentation import routes_public
@@ -101,6 +102,7 @@ def create_app() -> FastAPI:
     app.dependency_overrides[UserId] = get_current_user_id
 
     app.include_router(routes_auth.router)
+    app.include_router(routes_sso.router)
     app.include_router(routes_users.router)
     app.include_router(routes_wishlists.router)
     app.include_router(routes_public.router)

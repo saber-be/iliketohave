@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, signUp } from '../lib/api';
+import { API_BASE_URL, login, signUp } from '../lib/api';
 import { saveToken, clearToken } from '../lib/auth-storage';
 
 interface AuthModalProps {
@@ -58,6 +58,11 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
     }
   };
 
+  const handleGoogleSignIn = () => {
+    if (typeof window === 'undefined') return;
+    window.location.href = `${API_BASE_URL}/api/auth/sso/google/start`;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-fuchsia-100">
@@ -100,6 +105,14 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
             {error}
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          className="mb-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-base font-semibold text-slate-800 hover:bg-slate-50"
+        >
+          Continue with Google
+        </button>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
