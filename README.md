@@ -72,6 +72,10 @@ This repository contains:
   - Live / production deployment steps
   - Notes on using a registry and single‑server setups
 
+
+- **AI agent rules**  
+  See [`AI_AGENT_RULES.md`](./AI_AGENT_RULES.md) for the coding and security guidelines AI should follow when contributing.
+
 ---
 
 ## Quick Start (Very Short Version)
