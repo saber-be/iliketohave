@@ -13,6 +13,7 @@ from backend.domain.users.entities import UserId
 from backend.infrastructure.repositories.users import SqlAlchemyUsersUnitOfWork
 from backend.infrastructure.services.security import BcryptPasswordHasher
 from backend.presentation.dependencies import get_users_uow, get_token_service
+from backend.presentation.rate_limiter import rate_limit
 from backend.presentation.schemas import (
     LoginRequest,
     SignUpRequest,
@@ -36,6 +37,7 @@ def _user_to_response(user) -> UserResponse:
 @router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def signup(
     payload: SignUpRequest,
+    _: None = Depends(rate_limit(action="auth:signup", limit=5, window_seconds=60 * 10)),
     uow: SqlAlchemyUsersUnitOfWork = Depends(get_users_uow),
     password_hasher: PasswordHasher = Depends(BcryptPasswordHasher),
 ) -> UserResponse:
@@ -50,6 +52,7 @@ async def signup(
 @router.post("/login", response_model=TokenResponse)
 async def login(
     payload: LoginRequest,
+    _: None = Depends(rate_limit(action="auth:login", limit=10, window_seconds=60 * 5)),
     uow: SqlAlchemyUsersUnitOfWork = Depends(get_users_uow),
     password_hasher: PasswordHasher = Depends(BcryptPasswordHasher),
     token_service: TokenService = Depends(get_token_service),
