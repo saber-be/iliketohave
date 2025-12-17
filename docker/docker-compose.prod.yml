@@ -25,6 +25,7 @@ services:
       - "traefik.http.routers.nextiwant-api.entrypoints=websecure"
       - "traefik.http.routers.nextiwant-api.tls=true"
       - "traefik.http.routers.nextiwant-api.tls.certresolver=le"
+      - "traefik.http.routers.nextiwant-api.service=nextiwant-api"
       - "traefik.http.services.nextiwant-api.loadbalancer.server.port=8000"
 
   frontend:
@@ -45,6 +46,7 @@ services:
       - "traefik.http.routers.nextiwant.entrypoints=websecure"
       - "traefik.http.routers.nextiwant.tls=true"
       - "traefik.http.routers.nextiwant.tls.certresolver=le"
+      - "traefik.http.routers.nextiwant.service=nextiwant"
       - "traefik.http.services.nextiwant.loadbalancer.server.port=3000"
 
 networks:
