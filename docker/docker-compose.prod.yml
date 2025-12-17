@@ -4,6 +4,8 @@ services:
   redis:
     image: redis:7-alpine
     command: ["redis-server", "--appendonly", "no"]
+    networks:
+      - default
 
   backend:
     environment:
@@ -13,6 +15,17 @@ services:
       dockerfile: docker/backend.Dockerfile
     # In production you typically do not bind-mount source code
     volumes: []
+    networks:
+      - default
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.nextiwant-api.rule=Host(`api.nextiwant.com`)"
+      - "traefik.http.routers.nextiwant-api.entrypoints=websecure"
+      - "traefik.http.routers.nextiwant-api.tls=true"
+      - "traefik.http.routers.nextiwant-api.tls.certresolver=le"
+      - "traefik.http.services.nextiwant-api.loadbalancer.server.port=8000"
 
   frontend:
     environment:
@@ -22,3 +35,19 @@ services:
       dockerfile: docker/frontend.Dockerfile
     # No bind-mounts in production; use the built app inside the image
     volumes: []
+    networks:
+      - default
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.nextiwant.rule=Host(`nextiwant.com`)"
+      - "traefik.http.routers.nextiwant.entrypoints=websecure"
+      - "traefik.http.routers.nextiwant.tls=true"
+      - "traefik.http.routers.nextiwant.tls.certresolver=le"
+      - "traefik.http.services.nextiwant.loadbalancer.server.port=3000"
+
+networks:
+  proxy:
+    external: true
+    name: proxy
